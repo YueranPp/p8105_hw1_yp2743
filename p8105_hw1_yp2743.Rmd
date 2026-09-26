@@ -1,0 +1,19 @@
+---
+title: "p8105_hw1_yp2743"
+author: "Yueran Pan"
+date: "2026-09-26"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+# Problem 1
+```{r load_penguins}
+data("penguins", package = "palmerpenguins")
+```
+
+# Problem 2
