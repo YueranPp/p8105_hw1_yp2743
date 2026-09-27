@@ -11,9 +11,30 @@ library(tidyverse)
 ```
 
 
-# Problem 1
+## Problem 1
 ```{r load_penguins}
 data("penguins", package = "palmerpenguins")
+
 ```
 
-# Problem 2
+Description of penguins dataset:
+
+Dataset 'penguins' contain `r nrow(penguins)` observations with `r ncol(penguins)` variables, and each row represents one penguin. Variables include species (`species`: Adelie, Chinstrap, and Gentoo), island (`island`:Biscoe, Dream, and Torgersen), bill depth (`bill_depth_mm`) and bill length (`bill_length_mm`) in millimeters, sex (`sex`), body mass (`body_mass_g`) in grams, and year (`year`).
+
+The average flipper length among the studied penguin is `r mean(pull(penguins, flipper_length_mm), na.rm = TRUE)`mm.
+
+# Scatterplot
+
+Below is a scatterplot using bill length (x-axis) against flipper length (y-axis), with points colored by species. Two observations with missing measurements are omitted from the plot.
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm,  y = flipper_length_mm, color = species)) + 
+    geom_point()
+#Export using ggsave
+ggsave("hw1_penguins_scatterplot.pdf", height = 4, width = 6)
+```
+
+
+
+
+## Problem 2
