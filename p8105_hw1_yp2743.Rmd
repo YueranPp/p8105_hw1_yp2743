@@ -1,7 +1,10 @@
 ---
 title: "p8105_hw1_yp2743"
+
 author: "Yueran Pan"
+
 date: "2026-09-26"
+
 output: github_document
 ---
 
@@ -11,7 +14,7 @@ library(tidyverse)
 ```
 
 
-# Problem 1
+## Problem 1
 ```{r load_penguins}
 data("penguins", package = "palmerpenguins")
 ```
@@ -22,7 +25,7 @@ Dataset 'penguins' contain `r nrow(penguins)` observations with `r ncol(penguins
 
 The average flipper length among the studied penguin is `r mean(pull(penguins, flipper_length_mm), na.rm = TRUE)`mm.
 
-## Scatterplot
+### Scatterplot
 
 Below is a scatterplot using bill length (x-axis) against flipper length (y-axis), with points colored by species. Two observations with missing measurements are omitted from the plot.
 
@@ -36,9 +39,9 @@ ggsave("hw1_penguins_scatterplot.pdf", height = 4, width = 6)
 
 
 
-# Problem 2
+## Problem 2
 
-## Create a data frame
+### Create a data frame
 
 - a random sample of size 10 from a standard Normal distribution
 
@@ -58,7 +61,7 @@ hw1_df = tibble(
 
 ```
 
-## Take the mean of a variable in a dataframe,
+### Take the mean of a variable in a dataframe
 
 
 ```{r prob2_mean, collapse = TRUE}
@@ -67,15 +70,18 @@ mean(pull(hw1_df, logical_vec))
 mean(pull(hw1_df, char_vec))
 mean(pull(hw1_df, factor_vec))
 ```
+
+
 From `sample`, which is a numeric variable, I got a valid mean. 
 
-From `logical_vec`, which is a logical vector generates TRUE or FALSE, I got mean of 0.4.
+From `logical_vec`, which is a logical vector generates TRUE or FALSE, I got valid mean.
 
-From `char_vec`, which is a character vector, I got NA.
+From `char_vec`, which is a character vector, I got NA mean, with a warning.
 
-From `factor_vec`, which is a character vector, I got NA.
+From `factor_vec`, which is a factor vector, I got NA, with a warning.
 
-## Code chunk convertlogical, character, and factor variables to numeric.
+
+### Code chunk convertlogical, character, and factor variables to numeric
 ```{r prob2_as_numer, results = "hide", WARNING = FALSE}
 as.numeric(pull(hw1_df, logical_vec))
 as.numeric(pull(hw1_df, char_vec))
@@ -83,13 +89,29 @@ as.numeric(pull(hw1_df, factor_vec))
 ```
 
 
-## What happens, and why? 
-For logical vector, numeric conversion leads to 0 and 1 result, which is true or false. I also receive a warning from R that NAs introduced by coercion.
+### What happens, and why? 
 
-For character vector, numeric conversion leads to NA and number result, this makes sense because I treat my uni as characters, but four digits are actually number.
+For `logical_vec`, numeric conversion leads to 0 and 1 result, each recorded obs will be either 1 (originally, true) or 0 (originally, false). 
 
-For level vector, numeric conversion leads to 1, 2, and 3. `medium` is level 1, `grande` is level 2, `venti` is level 3. This makes sense, R treats it into three level that has an hierarchy.
+I receive a warning from R that `char_vec`(character vector)'s numeric conversion NAs introduced by coercion.
 
 
-## Does this help explain what happens when you try to take the mean?
-Yes, ~~~??
+For char_vec`, numeric conversion leads to NA and number result. If I have put ten length all by letters, I would have gotten all 'NA'. But because I add strings "2", "7", "4", "3", and "1", these can be interpreted as numbers and thus became numbers. The remaining strings cannot be intrepreted as numbers became 'NA', which produces the warning "NAs introduced by coercion".
+
+
+For `factor_vec`, numeric conversion leads to 1, 2, and 3. `medium` = 2, `grande` = 1, `venti` = 3. Instead of following first appearring became the first, my variables follow the alphabetical order of levels. Despite I wrote cup size level, but the factor vector I created is not an ordered factor.
+
+
+### Does this help explain what happens when I try to take the mean?
+
+
+These conversions help explain why same `mean()` function yield to different results, because I create four different types of vector. 
+
+Numeric values can be averaged directly, and logical values can be also averaged, as `TRUE` or `FALSE` representing 0/1.
+
+As `mean()` does not automatically convert characters to numbers, averaging character vector `char_vec` or factor vector `faactor_vec` would only yield into N/A result.
+
+
+
+(p.s: If I treat numbers as characters, for example, zip code or my id, conversion function can convert them back to number that R can recognize (as numeric). However if strings were letter, each string would become an NA.
+R can convert factor vector to numeric value, but the converted numbers lack meanings or loses the semantic meaning.) 
