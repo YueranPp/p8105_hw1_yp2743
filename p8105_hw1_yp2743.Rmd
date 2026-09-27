@@ -11,10 +11,9 @@ library(tidyverse)
 ```
 
 
-## Problem 1
+# Problem 1
 ```{r load_penguins}
 data("penguins", package = "palmerpenguins")
-
 ```
 
 Description of penguins dataset:
@@ -23,11 +22,11 @@ Dataset 'penguins' contain `r nrow(penguins)` observations with `r ncol(penguins
 
 The average flipper length among the studied penguin is `r mean(pull(penguins, flipper_length_mm), na.rm = TRUE)`mm.
 
-# Scatterplot
+## Scatterplot
 
 Below is a scatterplot using bill length (x-axis) against flipper length (y-axis), with points colored by species. Two observations with missing measurements are omitted from the plot.
 
-```{r}
+```{r prob1_ggplot}
 ggplot(penguins, aes(x = bill_length_mm,  y = flipper_length_mm, color = species)) + 
     geom_point()
 #Export using ggsave
@@ -37,4 +36,60 @@ ggsave("hw1_penguins_scatterplot.pdf", height = 4, width = 6)
 
 
 
-## Problem 2
+# Problem 2
+
+## Create a data frame
+
+- a random sample of size 10 from a standard Normal distribution
+
+- a logical vector indicating whether elements of the sample are greater than 0
+
+- a character vector of length 10
+
+- a factor vector of length 10, with 3 different factor “levels”
+
+```{r prob2_dataframe}
+hw1_df = tibble(
+  sample = rnorm(10),
+  logical_vec = sample > 0,
+  char_vec = c("y","p", "2","7", "4", "3", "H", "W", "No.", "1"),
+  factor_vec = factor(c("medium","grande","venti","medium","grande","venti","medium","grande","venti","medium"))
+)
+
+```
+
+## Take the mean of a variable in a dataframe,
+
+
+```{r prob2_mean, collapse = TRUE}
+mean(pull(hw1_df, sample))
+mean(pull(hw1_df, logical_vec))
+mean(pull(hw1_df, char_vec))
+mean(pull(hw1_df, factor_vec))
+```
+From `sample`, which is a numeric variable, I got a valid mean. 
+
+From `logical_vec`, which is a logical vector generates TRUE or FALSE, I got mean of 0.4.
+
+From `char_vec`, which is a character vector, I got NA.
+
+From `factor_vec`, which is a character vector, I got NA.
+
+## Code chunk convertlogical, character, and factor variables to numeric.
+```{r prob2_as_numer, results = "hide", WARNING = FALSE}
+as.numeric(pull(hw1_df, logical_vec))
+as.numeric(pull(hw1_df, char_vec))
+as.numeric(pull(hw1_df, factor_vec))
+```
+
+
+## What happens, and why? 
+For logical vector, numeric conversion leads to 0 and 1 result, which is true or false. I also receive a warning from R that NAs introduced by coercion.
+
+For character vector, numeric conversion leads to NA and number result, this makes sense because I treat my uni as characters, but four digits are actually number.
+
+For level vector, numeric conversion leads to 1, 2, and 3. `medium` is level 1, `grande` is level 2, `venti` is level 3. This makes sense, R treats it into three level that has an hierarchy.
+
+
+## Does this help explain what happens when you try to take the mean?
+Yes, ~~~??
